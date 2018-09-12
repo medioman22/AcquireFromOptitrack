@@ -64,6 +64,8 @@ int ConnectClient();
 
 boost::system::error_code send_rb_through_udp(sRigidBodyData rb, boost::asio::ip::udp::endpoint rem);
 
+boost::system::error_code send_sk_through_udp(sSkeletonData sk, boost::asio::ip::udp::endpoint rem);
+
 static const ConnectionType kDefaultConnectionType = ConnectionType_Multicast;
 
 NatNetClient* g_pClient = NULL;
@@ -631,7 +633,7 @@ void NATNET_CALLCONV DataHandler(sFrameOfMocapData* data, void* pUserData)
 				rbData.ID, rbData.x, rbData.y, rbData.z, rbData.qx, rbData.qy, rbData.qz, rbData.qw );
 
 
-			boost::system::error_code err = send_rb_through_udp(rbData, remote_endpoint);
+			//boost::system::error_code err = send_rb_through_udp(rbData, remote_endpoint);
 
 			//boost::system::error_code err;
 
@@ -641,6 +643,10 @@ void NATNET_CALLCONV DataHandler(sFrameOfMocapData* data, void* pUserData)
 
 
 		}
+
+		boost::system::error_code err = send_sk_through_udp(skData, remote_endpoint);
+
+
 	}
 
 	// labeled markers - this includes all markers (Active, Passive, and 'unlabeled' (markers with no asset but a PointCloud ID)
@@ -881,6 +887,34 @@ boost::system::error_code send_rb_through_udp(sRigidBodyData rb, boost::asio::ip
 	memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz), &rb.qw, sizeof(rb.qw));
 
 	_mysocket.send_to(boost::asio::buffer(pchar, 32), rem, 0, err);
+
+	return err;
+}
+
+boost::system::error_code send_sk_through_udp(sSkeletonData sk, boost::asio::ip::udp::endpoint rem)
+{
+	
+	boost::system::error_code err;
+
+	uint8_t* pchar = new uint8_t[32 * sk.nRigidBodies];
+
+	for (int j = 0; j< sk.nRigidBodies; j++)
+	{
+		sRigidBodyData rb = sk.RigidBodyData[j];
+
+		int sizeTot = sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz) + sizeof(rb.qw);
+
+		memcpy(pchar + j*sizeTot, &rb.ID, sizeof(rb.ID));
+		memcpy(pchar + sizeof(rb.ID) + j*sizeTot, &rb.x, sizeof(rb.x));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + j*sizeTot, &rb.y, sizeof(rb.y));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + j*sizeTot, &rb.z, sizeof(rb.z));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + j*sizeTot, &rb.qx, sizeof(rb.qx));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + j*sizeTot, &rb.qy, sizeof(rb.qy));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + j*sizeTot, &rb.qz, sizeof(rb.qz));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz) + j*sizeTot, &rb.qw, sizeof(rb.qw));
+	}
+
+	_mysocket.send_to(boost::asio::buffer(pchar, 32* sk.nRigidBodies), rem, 0, err);
 
 	return err;
 }
