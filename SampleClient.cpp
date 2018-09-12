@@ -904,14 +904,14 @@ boost::system::error_code send_sk_through_udp(sSkeletonData sk, boost::asio::ip:
 
 		int sizeTot = sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz) + sizeof(rb.qw);
 
-		memcpy(pchar, &rb.ID, sizeof(rb.ID) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID), &rb.x, sizeof(rb.x) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x), &rb.y, sizeof(rb.y) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y), &rb.z, sizeof(rb.z) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z), &rb.qx, sizeof(rb.qx) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx), &rb.qy, sizeof(rb.qy) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy), &rb.qz, sizeof(rb.qz) + j*sizeTot);
-		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz), &rb.qw, sizeof(rb.qw) + j*sizeTot);
+		memcpy(pchar + j*sizeTot, &rb.ID, sizeof(rb.ID));
+		memcpy(pchar + sizeof(rb.ID) + j*sizeTot, &rb.x, sizeof(rb.x));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + j*sizeTot, &rb.y, sizeof(rb.y));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + j*sizeTot, &rb.z, sizeof(rb.z));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + j*sizeTot, &rb.qx, sizeof(rb.qx));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + j*sizeTot, &rb.qy, sizeof(rb.qy));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + j*sizeTot, &rb.qz, sizeof(rb.qz));
+		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz) + j*sizeTot, &rb.qw, sizeof(rb.qw));
 	}
 
 	_mysocket.send_to(boost::asio::buffer(pchar, 32* sk.nRigidBodies), rem, 0, err);
