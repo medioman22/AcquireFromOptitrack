@@ -914,7 +914,7 @@ boost::system::error_code send_sk_through_udp(sSkeletonData sk, boost::asio::ip:
 		memcpy(pchar + sizeof(rb.ID) + sizeof(rb.x) + sizeof(rb.y) + sizeof(rb.z) + sizeof(rb.qx) + sizeof(rb.qy) + sizeof(rb.qz), &rb.qw, sizeof(rb.qw) + j*sizeTot);
 	}
 
-	_mysocket.send_to(boost::asio::buffer(pchar, 32), rem, 0, err);
+	_mysocket.send_to(boost::asio::buffer(pchar, 32* sk.nRigidBodies), rem, 0, err);
 
 	return err;
 }
