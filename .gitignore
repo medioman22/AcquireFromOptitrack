@@ -27,3 +27,4 @@
 # Executables
 *.out
 *.app
+bin/x64/Client-output.pts
