@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (SampleClient.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  SampleClient_markers.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+  - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+  SampleClient_markers.vcxproj -> C:\Users\macchini\Documents\GitHub\AcquireFromOptitrack_markers\bin\x64\SampleClient_markers.exe
+  SampleClient_markers.vcxproj -> bin\x64\SampleClient_markers.pdb (Full PDB)
